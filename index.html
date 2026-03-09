@@ -1,0 +1,175 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>ID Card Renewal</title>
+        <style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+h3 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.inta {
+    margin-bottom: 15px;
+    width: calc(100%);
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #555;
+    font-weight: bold;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+        </style>
+    <script>
+function show() {
+    var no = document.getElementById("no");
+    var wha = document.getElementById("wha");
+
+    if(no.checked){
+        wha.style.display = "block";
+    } else {
+        wha.style.display = "none";
+    }
+}
+
+</script>
+
+    </head>
+    <body>
+        <form id="myForm">
+          <h3>Job Enquiry Form</h3><br>  
+
+            <label for="text">Full Name:</label>
+            <input class="inta" type="text" name="name" required placeholder="Checkmate Services">
+
+            <label for="text">Date of Birth:</label>
+            <input class="inta" type="date" name="dob" required>
+
+            <label for="text">Gender:</label>
+            <select name="gender" class="inta" required>
+                <option value="" selected>Select your gender</option>
+                <option value="M">Male</option>
+                <option value="F">Female</option>
+                <option value="T">Transgender</option>
+            </select>
+
+            <label for="text">Mobile Number:</label>
+            <input type="text" class="inta" name="mob" required placeholder="0123456789">
+
+            <!-- Show Hide Content -->
+            <label for="text">Is WhatsApp number same as Mobile?</label>
+            <input type="radio" name="same" id="yes" onclick="show()" required> Yes 
+            &emsp;&emsp;&emsp;&emsp;
+            <input type="radio" name="same" id="no" onclick="show()"> No
+
+            <br><br>
+
+            <div id="wha" style="display:none;">
+            <label>Enter Your WhatsApp Number:</label>
+            <input type="number" name="whatsapp" class="inta" placeholder="0123456789">
+            </div>
+            
+            <label for="text">Email:</label>
+            <input type="text" class="inta" name="mail" required placeholder="xyz@gmail.com">
+
+            <label for="text">Height:</label>
+            <input type="text" class="inta" name="height" pattern="[0-9]'[0-9]{1,1}" placeholder="5'4" required>
+
+            <label for="text">Area:</label>
+            <input type="text" class="inta" name="area" placeholder="Baner" required>
+            
+            <label for="text">Remark</label>
+            <textarea class="inta" name="remark" rows="4" cols="50"></textarea><br><br>
+
+        <button type="submit" id="subm">Submit</button><br><br>
+
+    <!-- Element to display success/error message -->
+    <p id="responseMessage"></p>
+
+    <script>
+        const form = document.getElementById('myForm');
+        const responseMessage = document.getElementById('responseMessage');
+        const submitButton = document.getElementById('subm');
+
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault(); // Prevent the default form submission
+
+            submitButton.disabled = true;
+
+            // Get the form data
+            const formData = new FormData(form);
+
+            // Fetch API to submit data to the Apps Script web app URL
+            // REPLACE 'YOUR_WEB_APP_URL' with your deployed Apps Script URL
+            fetch('https://script.google.com/macros/s/AKfycbxl3qRp8n7ybkVcsn3dFGHruTYEZNo1IrlOH9V4FVZPt2tBHelLcZMRIVb-RykJ0PY3/exec', {
+                method: 'POST',
+                body: formData
+
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // Show success alert
+                    alert('Thank You! ' + data.message);
+                    submitButton.disabled = false;
+                    window.location.href = 'https://www.google.com/?safe=active&ssui=on&zx=1773065628867&no_sw_cr=1';
+                    
+                    // Clear the form fields using the reset() method
+
+                    form.reset();
+                  // Optionally, display a message within the page (instead of alert)
+                        responseMessage.style.display = 'block';
+                        submitButton.disabled = false;
+                } else {
+                    // Show error alert
+                    alert('Error: ' + data.message);
+                    responseMessage.innerHTML = 'Error: ' + data.message;
+                    responseMessage.style.color = 'red';
+                    submitButton.disabled = false;
+                }
+            })
+            .catch(error => {
+                console.error('Error!', error.message);
+                alert('An error occurred during submission.');
+                responseMessage.innerHTML = 'An error occurred during submission.';
+                responseMessage.style.color = 'red';
+                submitButton.disabled = false;
+            });
+        });
+    </script>
+</body>
+</html>
